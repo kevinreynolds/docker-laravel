@@ -1,0 +1,136 @@
+version: '2'
+
+services:
+    app:
+        image: alpine
+        command: /bin/sh
+        volumes:
+            - ./app:/var/www/html
+
+    proxy:
+        image: jwilder/nginx-proxy
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        ports:
+            - ${PROXY_PORT}:80
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+
+    nginx:
+        build: ./docker/build/nginx
+        depends_on:
+            - app
+        environment:
+            - VIRTUAL_HOST=${VIRTUAL_HOST}
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        volumes_from:
+            - app
+
+    php:
+        build: ./docker/build/php
+        depends_on:
+            - app
+        environment:
+            - NODE_ENV=${NODE_ENV}
+            - PHP_DISPLAY_ERRORS=${PHP_DISPLAY_ERRORS}
+            - PHP_DISPLAY_STARTUP_ERRORS=${PHP_DISPLAY_STARTUP_ERRORS}
+            - PHP_ERROR_REPORTING=${PHP_ERROR_REPORTING}
+            - PHP_CLI_MEMORY_LIMIT=512M
+            - PHP_FPM_MEMORY_LIMIT=128M
+            - PHP_FPM_POST_MAX_SIZE=8M
+            - PHP_FPM_UPLOAD_MAX_SIZE=2M
+            - PHP_FPM_XDEBUG_EXTENSION=${PHP_FPM_XDEBUG_EXTENSION}
+        extra_hosts:
+            - dockerhost:${DOCKERHOST}
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        # volumes:
+            # - ./docker/run/php/tmp:/tmp
+        volumes_from:
+            - app
+
+    # cron:
+    #     build: ./docker/build/cron
+    #     depends_on:
+    #         - app
+    #     logging:
+    #         driver: json-file
+    #         options:
+    #             max-size: ${LOG_SIZE}
+    #             max-file: ${LOG_ROTATE}
+    #     volumes_from:
+    #         - app
+
+    redis:
+        build: ./docker/build/redis
+        command: redis-server /usr/local/etc/redis/redis.conf ${REDIS_PARAMETERS}
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        ports:
+            - ${REDIS_PORT}:6379
+        volumes:
+            - redis:/data
+
+    mysql:
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        image: mysql:5.7
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        ports:
+            - ${MYSQL_PORT}:3306
+        volumes:
+            - mysql:/var/lib/mysql
+
+    # napp:
+    #     image: alpine
+    #     command: /bin/sh
+    #     volumes:
+    #         - ./napp:/var/www/html
+
+    # node:
+    #     build: ./docker/build/node
+    #     command: npm run start
+    #     depends_on:
+    #         - napp
+    #         - redis
+    #     environment:
+    #         - NODE_ENV=${NODE_ENV}
+    #         - PORT=${NODE_PORT}
+    #     expose:
+    #         - ${NODE_PORT}
+    #     logging:
+    #         driver: json-file
+    #         options:
+    #             max-size: ${LOG_SIZE}
+    #             max-file: ${LOG_ROTATE}
+    #     ports:
+    #         - ${NODE_PORT}:${NODE_PORT}
+    #     volumes_from:
+    #         - napp
+
+volumes:
+    redis:
+        driver: local
+
+    mysql:
+        driver: local
