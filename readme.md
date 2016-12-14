@@ -31,16 +31,68 @@ Set `DOCKERHOST` so that you can connect to host machine from inside the  docker
 
 Use [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) or similar extension for Xdebug to connect to PhpStorm.
 
-You may temporarily uncomment `./docker/run/php/tmp:/tmp` volume in php service for easy access to Xdebug Profiler Snapshots if you need one.
+You may temporarily mount this volume on php service to get an easy access to Xdebug Profiler Snapshots if you need one
+
+```
+        volumes:
+            - ./docker/run/php/tmp:/tmp
+```
 
 ## Cron
 
-Uncomment `cron` service in docker-compose.yml. It's disabled by default for performance reasons.
+Add cron service to `docker-compose.yml`:
+
+```
+    cron:
+        build: ./docker/build/cron
+        depends_on:
+            - app
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        volumes_from:
+            - app
+```
+
+It's not included by by default for performance reasons.
 
 Don't look for `cron` logs. There ain't any and `docker-compose logs cron` won't work. There are various hacks to circumvent this limitation when running cron daemon in Docker container and you look them up on Stackoverflow, but they are ugly (and more importantly, they make maintaining your Docker deployment much harder) so I won't be introducing them by default for now.
 
 Note, that cron image includes PHP CLI so you might want to sync it with some of the changes in php image. You probably won't be doing this much often as a lot of php settings are configured via environment variables.
 
-## SPA and NODE apps
+## Single-page applications and Node.js
 
-As experiment, I provide a naive implementation for running node apps and single page applications inside Docker container. To use it you must uncomment `napp` and `node` services is `docker-compose.yml` and place your app in `./napp` folder. You might want to change default command (`npm run start`) or disable dependency on redis (enabled by default for Pub/Sub functionality).
+As experiment, I provide a naive implementation for running node and single page applications inside Docker container. Add these services to your `docker-compose.yml` file and place your code inside `./napp` folder (it's added to .gitignore).
+
+```
+    napp:
+        image: alpine
+        command: /bin/sh
+        volumes:
+            - ./napp:/var/www/html
+
+    node:
+        build: ./docker/build/node
+        command: npm run start
+        depends_on:
+            - napp
+            - redis
+        environment:
+            - NODE_ENV=${NODE_ENV}
+            - PORT=${NODE_PORT}
+        expose:
+            - ${NODE_PORT}
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        ports:
+            - ${NODE_PORT}:${NODE_PORT}
+        volumes_from:
+            - napp
+```
+
+You might want to change/remove default command (`npm run start`) or disable service dependency on redis (enabled for Pub/Sub functionality).

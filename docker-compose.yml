@@ -54,22 +54,8 @@ services:
             options:
                 max-size: ${LOG_SIZE}
                 max-file: ${LOG_ROTATE}
-        # volumes:
-            # - ./docker/run/php/tmp:/tmp
         volumes_from:
             - app
-
-    # cron:
-    #     build: ./docker/build/cron
-    #     depends_on:
-    #         - app
-    #     logging:
-    #         driver: json-file
-    #         options:
-    #             max-size: ${LOG_SIZE}
-    #             max-file: ${LOG_ROTATE}
-    #     volumes_from:
-    #         - app
 
     redis:
         build: ./docker/build/redis
@@ -100,33 +86,6 @@ services:
             - ${MYSQL_PORT}:3306
         volumes:
             - mysql:/var/lib/mysql
-
-    # napp:
-    #     image: alpine
-    #     command: /bin/sh
-    #     volumes:
-    #         - ./napp:/var/www/html
-
-    # node:
-    #     build: ./docker/build/node
-    #     command: npm run start
-    #     depends_on:
-    #         - napp
-    #         - redis
-    #     environment:
-    #         - NODE_ENV=${NODE_ENV}
-    #         - PORT=${NODE_PORT}
-    #     expose:
-    #         - ${NODE_PORT}
-    #     logging:
-    #         driver: json-file
-    #         options:
-    #             max-size: ${LOG_SIZE}
-    #             max-file: ${LOG_ROTATE}
-    #     ports:
-    #         - ${NODE_PORT}:${NODE_PORT}
-    #     volumes_from:
-    #         - napp
 
 volumes:
     redis:
