@@ -27,9 +27,9 @@ Consider disabling Transparent Huge Pages in your Host machine kernel to avoid l
 
 ## Xdebug
 
-Set `DOCKERHOST` so that you can connect to host machine from inside the  docker container. For example, on Windows 10 the correct value would be `10.0.75.1`.
+Use [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) browser extension and PhpStorm to work with Xdebug on Docker.
 
-Use [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) or similar extension for Xdebug to connect to PhpStorm.
+You must first set `DOCKERHOST` in `.env` file so that you can connect to host machine from inside the  docker container. For example, on Windows 10 the correct value would be `10.0.75.1`.
 
 You may temporarily mount this volume on php service to get an easy access to Xdebug Profiler Snapshots if you need one
 
@@ -63,6 +63,8 @@ Don't look for `cron` logs. There ain't any and `docker-compose logs cron` won't
 Note, that cron image includes PHP CLI so you might want to sync it with some of the changes in php image. You probably won't be doing this much often as a lot of php settings are configured via environment variables.
 
 ## Single-page applications and Node.js
+
+> This functionality is not yet ready for production usage
 
 As experiment, I provide a naive implementation for running node and single page applications inside Docker container. Add these services to your `docker-compose.yml` file and place your code inside `./napp` folder (it's added to .gitignore).
 
