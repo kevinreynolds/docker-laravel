@@ -73,9 +73,9 @@ services:
     mysql:
         environment:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-            - MYSQL_DATABASE=${MYSQL_DATABASE}
-            - MYSQL_USER=${MYSQL_USER}
-            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_DATABASE=${RDMS_DATABASE}
+            - MYSQL_USER=${RDMS_USER}
+            - MYSQL_PASSWORD=${RDMS_PASSWORD}
         image: mysql:5.7
         logging:
             driver: json-file

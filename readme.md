@@ -47,6 +47,37 @@ Don't look for `cron` logs. There ain't any and `docker-compose logs cron` won't
 
 Note, that cron image includes PHP CLI so you might want to sync it with some of the changes in php image. You probably won't be doing this much often as a lot of php settings are configured via environment variables.
 
+## Postgres
+
+If you wish to use postgres instead of mysql, simply replace corresponding service and volume with the following snippets:
+
+**Service**
+
+```
+    postgres:
+        environment:
+            POSTGRES_DB: ${RDMS_DATABASE}
+            POSTGRES_USER: ${RDMS_USER}
+            POSTGRES_PASSWORD: ${RDMS_PASSWORD}
+        image: postgres
+        logging:
+            driver: json-file
+            options:
+                max-size: ${LOG_SIZE}
+                max-file: ${LOG_ROTATE}
+        ports:
+            - "{POSTGRES_PORT}:5432"
+        volumes:
+            - postgres:/var/lib/postgresql/data
+```
+
+**Volume**
+
+```
+    postgres:
+        driver: local
+```
+
 ## Single-page applications and Node.js
 
 > This functionality is not yet ready for production usage
