@@ -53,7 +53,7 @@ SQLite is installed by default on php image.
 
 ## Postgres
 
-If you wish to use postgres instead of mysql, simply replace corresponding service and volume with the following snippets:
+If you wish to use postgres, simply replace mysql's service and volume with the following snippet. You must also *build PHP with pgsql extension* (see corresponding Dockerfile).
 
 **Service**
 
