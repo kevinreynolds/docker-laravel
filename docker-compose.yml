@@ -21,10 +21,10 @@ services:
 
     nginx:
         build: ./docker/build/nginx
-        depends_on:
-            - app
         environment:
             - VIRTUAL_HOST=${VIRTUAL_HOST}
+        links:
+            - app
         logging:
             driver: json-file
             options:
@@ -35,8 +35,6 @@ services:
 
     php:
         build: ./docker/build/php
-        depends_on:
-            - app
         environment:
             - NODE_ENV=${NODE_ENV}
             - PHP_DISPLAY_ERRORS=${PHP_DISPLAY_ERRORS}
@@ -49,6 +47,8 @@ services:
             - PHP_FPM_XDEBUG_EXTENSION=${PHP_FPM_XDEBUG_EXTENSION}
         extra_hosts:
             - dockerhost:${DOCKERHOST}
+        links:
+            - app
         logging:
             driver: json-file
             options:

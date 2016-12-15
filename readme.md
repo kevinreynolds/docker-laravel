@@ -45,7 +45,7 @@ Add cron service to `docker-compose.yml`:
 ```
     cron:
         build: ./docker/build/cron
-        depends_on:
+        links:
             - app
         logging:
             driver: json-file
@@ -78,14 +78,14 @@ As experiment, I provide a naive implementation for running node and single page
     node:
         build: ./docker/build/node
         command: npm run start
-        depends_on:
-            - napp
-            - redis
         environment:
             - NODE_ENV=${NODE_ENV}
             - PORT=${NODE_PORT}
         expose:
             - ${NODE_PORT}
+        links:
+            - napp
+            - redis
         logging:
             driver: json-file
             options:
