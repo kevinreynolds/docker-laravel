@@ -6,24 +6,9 @@
 
 3. Run `docker-compose up -d`.
 
-Note, that `./app` folder is added to `.gitignore` by default which you may want to change if you choose to store docker config and application in the same repo. 
+Note, that `./app` folder is added to `.gitignore` which you may want to change if by any chance you choose to store docker setup and your source code in the same repo. 
 
-It's generally recommended to contain source code in a sub directory so that you can easily add other members in the stack (i.e. single-page application or socket.io companion app) later.
-
-## Docker Cloud
-
-Below are some of the steps you'll need to perform to prepare your build for deployment on Docker Cloud:
-
-1. Make each service top level member in your stack file, remove other properties such as `version`, `volumes`, `networks` and the like.
-2. Remove `logging` section from service's definition.
-3. Build all of your images beforehand. Deploy your source code as image instead of using data only container with mounted directory. See [Automated builds](https://docs.docker.com/docker-cloud/builds/automated-build/) secton in the Docker docs.
-4. Replace all named volumes with data only containers.
-5. Set `deployment_strategy: every_node` on proxy service if you want to scale beyond one host.
-6. Use Cloudflare for SSL certificates. There is also a option to use automated [Letsencrypt companion](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion) for your nginx proxy, but the repo has been dead for a few months and it kinda overcomplicates things unnecessarily when you consider development environment.
-
-## Other concerns
-
-Consider disabling Transparent Huge Pages in your Host machine kernel to avoid latency and memory usage issues with Redis.
+It's generally recommended to contain source code in a sub directory so that you can easily add other members in the stack (i.e. single-page application or socket.io companion) later.
 
 ## Xdebug
 
@@ -66,7 +51,7 @@ Note, that cron image includes PHP CLI so you might want to sync it with some of
 
 > This functionality is not yet ready for production usage
 
-As experiment, I provide a naive implementation for running node and single page applications inside Docker container. Add these services to your `docker-compose.yml` file and place your code inside `./napp` folder (it's added to .gitignore).
+I provide a very naive implementation for running node and single page applications inside Docker container. Add these services to your `docker-compose.yml` file and place your code inside `./napp` folder (it's already added to .gitignore).
 
 ```
     napp:
@@ -97,4 +82,4 @@ As experiment, I provide a naive implementation for running node and single page
             - napp
 ```
 
-You might want to change/remove default command (`npm run start`) or disable service dependency on redis (enabled for Pub/Sub functionality).
+You might want to change/remove default command or disable service dependency on redis (enabled by default so you don't forget it for Pub/Sub stuff).
