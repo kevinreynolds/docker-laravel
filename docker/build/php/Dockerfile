@@ -7,14 +7,13 @@ RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-ENV TERM xterm
-ENV VISUAL vim
-ENV EDITOR vim
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
 
-    && apt-get install -y wget curl zip unzip software-properties-common \
-    && apt-get install -y vim httpie \
+    && apt-get install -y wget curl software-properties-common \
+    && apt-get install -y sqlite3 libsqlite3-dev \
 
     && add-apt-repository -y ppa:ondrej/php \
     && apt-get update \
@@ -28,10 +27,10 @@ RUN apt-get update \
         php7.1-xml \
         php7.1-readline \
 
+        php7.1-sqlite3 \
         php7.1-mysql \
         # php7.1-redis \
         # php7.1-pgsql \
-        # php7.1-sqlite3 \
         # php7.1-mongodb \
         # php7.1-memcached \
 
@@ -67,8 +66,8 @@ RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN echo 'cd /var/www/html' >> ~/.bashrc
-RUN echo 'clear' >> ~/.bashrc
 
+ENV TERM xterm
 ENV NODE_ENV ${NODE_ENV}
 ENV PHP_DISPLAY_ERRORS ${PHP_DISPLAY_ERRORS}
 ENV PHP_DISPLAY_STARTUP_ERRORS ${PHP_DISPLAY_STARTUP_ERRORS}
@@ -79,6 +78,7 @@ ENV PHP_FPM_POST_MAX_SIZE ${PHP_FPM_POST_MAX_SIZE}
 ENV PHP_FPM_UPLOAD_MAX_SIZE ${PHP_FPM_UPLOAD_MAX_SIZE}
 ENV PHP_FPM_XDEBUG_EXTENSION ${PHP_FPM_XDEBUG_EXTENSION}
 
+COPY .sqliterc ~/.sqliterc
 COPY php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
 COPY www.conf /etc/php/7.1/fpm/pool.d/www.conf
 COPY 00-cli.ini /etc/php/7.1/cli/conf.d/00-cli.ini

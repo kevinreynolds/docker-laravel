@@ -8,6 +8,8 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update \
 
     && apt-get install -y curl cron software-properties-common \
