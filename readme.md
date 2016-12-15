@@ -47,6 +47,19 @@ Don't look for `cron` logs. There ain't any and `docker-compose logs cron` won't
 
 Note, that cron image includes PHP CLI so you might want to sync it with some of the changes in php image. You probably won't be doing this much often as a lot of php settings are configured via environment variables.
 
+## Beanstalkd
+
+Add beanstalkd to services section. Note that you might want to mount `/var/lib/beanstalkd/data` as named volume if you wan to persist beanstalkd queues.
+
+```
+    beanstalkd:
+        build: ./docker/build/beanstalkd
+        links:
+            - php
+```
+
+Image is build with [Beanstool](https://github.com/src-d/beanstool) already installed (i.e. running `docker-compose exec beanstalkd beanstool stats` will display queue stats).
+
 ## SQLite
 
 SQLite is installed by default on php image.
