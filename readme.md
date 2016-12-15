@@ -72,10 +72,7 @@ If you wish to use postgres, simply replace mysql's service and volume with the 
 
 ```
     postgres:
-        environment:
-            POSTGRES_DB: ${RDMS_DATABASE}
-            POSTGRES_USER: ${RDMS_USER}
-            POSTGRES_PASSWORD: ${RDMS_PASSWORD}
+        env_file: .env
         image: postgres
         logging:
             driver: json-file
@@ -115,9 +112,7 @@ I provide a very naive implementation for running node and single page applicati
     node:
         build: ./docker/build/node
         command: npm run start
-        environment:
-            - NODE_ENV=${NODE_ENV}
-            - PORT=${NODE_PORT}
+        env_file: .env
         expose:
             - ${NODE_PORT}
         links:

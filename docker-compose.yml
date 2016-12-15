@@ -21,8 +21,7 @@ services:
 
     nginx:
         build: ./docker/build/nginx
-        environment:
-            - VIRTUAL_HOST=${VIRTUAL_HOST}
+        env_file: .env
         links:
             - app
         logging:
@@ -35,16 +34,7 @@ services:
 
     php:
         build: ./docker/build/php
-        environment:
-            - NODE_ENV=${NODE_ENV}
-            - PHP_DISPLAY_ERRORS=${PHP_DISPLAY_ERRORS}
-            - PHP_DISPLAY_STARTUP_ERRORS=${PHP_DISPLAY_STARTUP_ERRORS}
-            - PHP_ERROR_REPORTING=${PHP_ERROR_REPORTING}
-            - PHP_CLI_MEMORY_LIMIT=512M
-            - PHP_FPM_MEMORY_LIMIT=128M
-            - PHP_FPM_POST_MAX_SIZE=8M
-            - PHP_FPM_UPLOAD_MAX_SIZE=2M
-            - PHP_FPM_XDEBUG_EXTENSION=${PHP_FPM_XDEBUG_EXTENSION}
+        env_file: .env
         extra_hosts:
             - dockerhost:${DOCKERHOST}
         links:
@@ -71,11 +61,7 @@ services:
             - redis:/data
 
     mysql:
-        environment:
-            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-            - MYSQL_DATABASE=${RDMS_DATABASE}
-            - MYSQL_USER=${RDMS_USER}
-            - MYSQL_PASSWORD=${RDMS_PASSWORD}
+        env_file: .env
         image: mysql:5.7
         logging:
             driver: json-file
