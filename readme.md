@@ -78,6 +78,10 @@ If you wish to use postgres instead of mysql, simply replace corresponding servi
         driver: local
 ```
 
+## MariaDB
+
+If you wish to use mariadb instead of mysql, simply replace mysql image with mariadb's (i.e. `mariadb:10`). You don't need to change anything else.
+
 ## Single-page applications and Node.js
 
 > This functionality is not yet ready for production usage
