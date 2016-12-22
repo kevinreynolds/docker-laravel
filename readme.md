@@ -8,7 +8,7 @@
 
 Note, that `./app` folder is added to `.gitignore` which you may want to change if by any chance you choose to store docker setup and your source code in the same repo. 
 
-It's generally recommended to contain source code in a sub directory so that you can easily add other members in the stack (i.e. single-page application or socket.io companion) later.
+It's generally recommended to contain source code in a sub directory so that you can easily add other members in the stack later.
 
 ## Xdebug
 
@@ -43,7 +43,7 @@ Add cron service to `docker-compose.yml`:
 
 It's not included by by default for performance reasons.
 
-Don't look for `cron` logs. There ain't any and `docker-compose logs cron` won't work. There are various hacks to circumvent this limitation when running cron daemon in Docker container and you look them up on Stackoverflow, but they are ugly (and more importantly, they make maintaining your Docker deployment much harder) so I won't be introducing them by default for now.
+Don't look for `cron` logs. There ain't any and `docker-compose logs cron` won't work. There are various hacks to circumvent this limitation when running cron daemon in Docker container and you can look them up on Stackoverflow, but they are ugly (and more importantly, they make maintaining your Docker deployment much harder) so I won't be introducing them by default for now.
 
 Note, that cron image includes PHP CLI so you might want to sync it with some of the changes in php image. You probably won't be doing this much often as a lot of php settings are configured via environment variables.
 

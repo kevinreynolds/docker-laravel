@@ -12,11 +12,16 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
 
-    && apt-get install -y wget curl software-properties-common \
+    && apt-get install -y wget curl zip unzip software-properties-common \
     && apt-get install -y sqlite3 libsqlite3-dev \
 
+    && add-apt-repository -y ppa:git-core/ppa \
     && add-apt-repository -y ppa:ondrej/php \
+
     && apt-get update \
+
+    && apt-get install -y git \
+
     && apt-get install -y php7.1-fpm php7.1-cli \
         # php7.1-dev \
         php7.1-mbstring \
