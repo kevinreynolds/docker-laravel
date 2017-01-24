@@ -34,7 +34,7 @@ RUN apt-get update \
 
         php7.1-sqlite3 \
         php7.1-mysql \
-        # php7.1-redis \
+        php7.1-redis \
         # php7.1-pgsql \
         # php7.1-mongodb \
         # php7.1-memcached \
