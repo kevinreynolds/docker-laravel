@@ -14,7 +14,7 @@ It's generally recommended to contain source code in a sub directory so that you
 
 Use [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) browser extension and PhpStorm to work with Xdebug on Docker.
 
-You must first set `DOCKERHOST` in `.env` file so that you can connect to host machine from inside the  docker container. For example, on Windows 10 the correct value would be `10.0.75.1`.
+You must first set `XDEBUG_HOST` in `.env` file so that you can connect to host machine from inside the  docker container. For example, on Windows 10 the correct value would be `10.0.75.1`.
 
 You may temporarily mount this volume on php service to get an easy access to Xdebug Profiler Snapshots if you need one
 

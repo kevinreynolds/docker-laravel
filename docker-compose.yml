@@ -36,7 +36,7 @@ services:
         build: ./docker/build/php
         env_file: .env
         extra_hosts:
-            - dockerhost:${DOCKERHOST}
+            - dockerhost:${XDEBUG_HOST}
         links:
             - app
         logging:
