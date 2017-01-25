@@ -13,25 +13,33 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
 
     && apt-get install -y curl cron software-properties-common \
+    && apt-get install -y sqlite3 libsqlite3-dev \
 
     && add-apt-repository -y ppa:ondrej/php \
     && apt-get update \
     && apt-get install -y php7.1-cli \
         # php7.1-dev \
-        php7.1-mbstring php7.1-json php7.1-curl php7.1-intl php7.1-zip php7.1-xml \
+        php7.1-mbstring \
+        php7.1-json \
+        php7.1-curl \
+        php7.1-intl \
+        php7.1-zip \
+        php7.1-xml \
+        php7.1-readline \
+
+        php7.1-sqlite3 \
         php7.1-mysql \
         php7.1-redis \
         # php7.1-pgsql \
-        # php7.1-sqlite3 \
         # php7.1-mongodb \
         # php7.1-memcached \
+
         # php7.1-bcmath \
         # php7.1-gd \
         # php7.1-apcu \
         # php7.1-imap \
         # php7.1-xmlrpc \
         # php7.1-soap \
-        # php7.1-readline \
 
     && apt-get remove -y --purge software-properties-common \
     && apt-get clean \
@@ -44,6 +52,7 @@ ENV PHP_REALPATH_CACHE_SIZE ${PHP_REALPATH_CACHE_SIZE}
 ENV PHP_REALPATH_CACHE_TTL ${PHP_REALPATH_CACHE_TTL}
 ENV PHP_CLI_MEMORY_LIMIT ${PHP_ERROR_REPORTING}
 
+COPY .sqliterc ~/.sqliterc
 COPY 00-cli.ini /etc/php/7.1/cli/conf.d/00-cli.ini
 
 COPY crontabs /var/spool/cron/crontabs
