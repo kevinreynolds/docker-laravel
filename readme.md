@@ -183,7 +183,7 @@ I provide a very naive implementation for running node and single page applicati
         image: alpine
         command: /bin/sh
         volumes:
-            - ./napp:/var/www/html
+            - ./napp:/opt/project
 
     node:
         build: ./docker/build/node

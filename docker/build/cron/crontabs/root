@@ -1,1 +1,1 @@
-* * * * * php /var/www/html/artisan schedule:run >> /dev/null 2>&1
+* * * * * php /opt/project/artisan schedule:run >> /dev/null 2>&1

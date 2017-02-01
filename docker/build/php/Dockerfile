@@ -70,7 +70,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo 'cd /var/www/html' >> ~/.bashrc
+RUN echo 'cd /opt/project' >> ~/.bashrc
 
 ENV TERM xterm
 ENV NODE_ENV ${NODE_ENV}

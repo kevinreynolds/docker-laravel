@@ -5,7 +5,7 @@ services:
         image: alpine
         command: /bin/sh
         volumes:
-            - ./app:/var/www/html
+            - ./app:/opt/project
 
     nginx:
         build: ./docker/build/nginx

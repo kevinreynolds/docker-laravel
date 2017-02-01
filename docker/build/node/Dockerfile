@@ -13,6 +13,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 
 ENV NODE_ENV ${NODE_ENV}
 
-WORKDIR /var/www/html
+WORKDIR /opt/project
 
 CMD ["bash"]
