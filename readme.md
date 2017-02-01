@@ -10,6 +10,72 @@ Note, that `./app` folder is added to `.gitignore` which you may want to change 
 
 It's generally recommended to contain source code in a sub directory so that you can easily add other members in the stack later.
 
+## Virtual hosts
+
+Remove this section from nginx service definition in `docker-compose.yml` or replace `PROXY_PORT` with other variable value to free port 80:
+
+```
+        ports:
+            - ${PROXY_PORT}:80
+```
+
+Add this proxy service:
+
+```
+    proxy:
+        image: jwilder/nginx-proxy
+        logging:
+            driver: json-file
+            options:
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
+        ports:
+            - ${PROXY_PORT}:80
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+```
+
+Add this to your `.env` file. You can replace the values below with your hostnames of choice.
+
+```
+VIRTUAL_HOST=localhost,.localtunnel.me,.ngrok.io,.xip.io
+```
+
+## Redis
+
+Add redis service
+
+```
+    redis:
+        build: ./docker/build/redis
+        command: redis-server /usr/local/etc/redis/redis.conf ${REDIS_PARAMETERS}
+        logging:
+            driver: json-file
+            options:
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
+        ports:
+            - ${REDIS_PORT}:6379
+        volumes:
+            - redis:/data
+```
+
+and corresponding volume
+
+```
+    redis:
+        driver: local
+```
+
+Add the variables below to your `.env` file.
+
+```
+REDIS_PORT=6379
+
+# Example: "--requirepass secret --maxmemory 100mb --maxmemory-policy allkeys-lru"
+REDIS_PARAMETERS=
+```
+
 ## Xdebug
 
 Use [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) browser extension and PhpStorm to work with Xdebug on Docker.
@@ -35,8 +101,8 @@ Add cron service to `docker-compose.yml`:
         logging:
             driver: json-file
             options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
         volumes_from:
             - app
 ```
@@ -77,8 +143,8 @@ If you wish to use postgres, simply replace mysql's service and volume with the 
         logging:
             driver: json-file
             options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
         ports:
             - "{POSTGRES_PORT}:5432"
         volumes:
@@ -90,6 +156,16 @@ If you wish to use postgres, simply replace mysql's service and volume with the 
 ```
     postgres:
         driver: local
+```
+
+Add this to `.env` file:
+
+```
+POSTGRES_PORT=5432
+
+POSTGRES_DB=homestead
+POSTGRES_USER=homestead
+POSTGRES_PASSWORD=secret
 ```
 
 ## MariaDB
@@ -121,12 +197,18 @@ I provide a very naive implementation for running node and single page applicati
         logging:
             driver: json-file
             options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
         ports:
             - ${NODE_PORT}:${NODE_PORT}
         volumes_from:
             - napp
+```
+
+Add this line to `.env` file:
+
+```
+NODE_PORT=3000
 ```
 
 You might want to change/remove default command or disable service dependency on redis (enabled by default so you don't forget it for Pub/Sub stuff).

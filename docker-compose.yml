@@ -7,18 +7,6 @@ services:
         volumes:
             - ./app:/var/www/html
 
-    proxy:
-        image: jwilder/nginx-proxy
-        logging:
-            driver: json-file
-            options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
-        ports:
-            - ${PROXY_PORT}:80
-        volumes:
-            - /var/run/docker.sock:/tmp/docker.sock:ro
-
     nginx:
         build: ./docker/build/nginx
         env_file: .env
@@ -27,8 +15,10 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
+        ports:
+            - ${PROXY_PORT}:80
         volumes_from:
             - app
 
@@ -42,23 +32,10 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
         volumes_from:
             - app
-
-    redis:
-        build: ./docker/build/redis
-        command: redis-server /usr/local/etc/redis/redis.conf ${REDIS_PARAMETERS}
-        logging:
-            driver: json-file
-            options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
-        ports:
-            - ${REDIS_PORT}:6379
-        volumes:
-            - redis:/data
 
     mysql:
         env_file: .env
@@ -66,16 +43,13 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: ${LOG_SIZE}
-                max-file: ${LOG_ROTATE}
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
         ports:
             - ${MYSQL_PORT}:3306
         volumes:
             - mysql:/var/lib/mysql
 
 volumes:
-    redis:
-        driver: local
-
     mysql:
         driver: local
