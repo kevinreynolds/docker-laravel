@@ -4,7 +4,9 @@
 
 2. Create your environment configuration: `cp .env.example .env`
 
-3. Run `docker-compose up -d`.
+3. Create your docker environment configuration: `cp docker.env.example docker.env`
+
+4. Run `docker-compose up -d`.
 
 Note, that `./app` folder is added to `.gitignore` which you may want to change if by any chance you choose to store docker setup and your source code in the same repo. 
 
@@ -23,6 +25,7 @@ Add this proxy service:
 
 ```
     proxy:
+        env_file: docker.env
         image: jwilder/nginx-proxy
         logging:
             driver: json-file
@@ -35,7 +38,7 @@ Add this proxy service:
             - /var/run/docker.sock:/tmp/docker.sock:ro
 ```
 
-Add this to your `.env` file. You can replace the values below with your hostnames of choice.
+Add this to your `docker.env` file. You can replace the values below with your hostnames of choice.
 
 ```
 VIRTUAL_HOST=localhost,.localtunnel.me,.ngrok.io,.xip.io
@@ -162,7 +165,11 @@ Add this to `.env` file:
 
 ```
 POSTGRES_PORT=5432
+```
 
+Add this to your `docker.env` file:
+
+```
 POSTGRES_DB=homestead
 POSTGRES_USER=homestead
 POSTGRES_PASSWORD=secret
@@ -188,7 +195,7 @@ I provide a very naive implementation for running node and single page applicati
     node:
         build: ./docker/build/node
         command: npm run start
-        env_file: .env
+        env_file: docker.env
         expose:
             - ${NODE_PORT}
         links:
@@ -205,7 +212,7 @@ I provide a very naive implementation for running node and single page applicati
             - napp
 ```
 
-Add this line to `.env` file:
+Add this line to `docker.env` file:
 
 ```
 NODE_PORT=3000

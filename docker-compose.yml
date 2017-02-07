@@ -9,7 +9,7 @@ services:
 
     nginx:
         build: ./docker/build/nginx
-        env_file: .env
+        env_file: docker.env
         links:
             - app
         logging:
@@ -24,7 +24,7 @@ services:
 
     php:
         build: ./docker/build/php
-        env_file: .env
+        env_file: docker.env
         extra_hosts:
             - dockerhost:${XDEBUG_HOST}
         links:
@@ -38,7 +38,7 @@ services:
             - app
 
     mysql:
-        env_file: .env
+        env_file: docker.env
         image: mysql:5.7
         logging:
             driver: json-file
