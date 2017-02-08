@@ -44,6 +44,28 @@ Add this to your `docker.env` file. You can replace the values below with your h
 VIRTUAL_HOST=localhost,.localtunnel.me,.ngrok.io,.xip.io
 ```
 
+## Mailhog
+
+Add Mailhog service (the application itself should connect on port `1025`):
+
+```
+    mailhog:
+        image: mailhog/mailhog:latest
+        logging:
+            driver: json-file
+            options:
+                max-size: ${SERVICE_LOG_SIZE}
+                max-file: ${SERVICE_LOG_ROTATE}
+        ports:
+            - ${MAILHOG_PORT}:8025
+```
+
+edit `.env` file:
+
+```
+MAILHOG_PORT=8025
+```
+
 ## Redis
 
 Add redis service
