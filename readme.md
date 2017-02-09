@@ -1,3 +1,22 @@
+# Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+- [Installation](#installation)
+- [Alternative installation](#alternative-installation)
+- [Virtual hosts](#virtual-hosts)
+- [Mailhog](#mailhog)
+- [Redis](#redis)
+- [Xdebug](#xdebug)
+- [Cron](#cron)
+- [Beanstalkd](#beanstalkd)
+- [SQLite](#sqlite)
+- [Postgres](#postgres)
+- [MariaDB](#mariadb)
+- [Single-page applications and Node.js](#single-page-applications-and-nodejs)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Installation
 
 1. Put/clone you Laravel application in `./app` folder. 
