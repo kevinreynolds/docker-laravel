@@ -6,11 +6,20 @@
 
 3. Create your docker environment configuration: `cp docker.env.example docker.env`
 
-4. Run `docker-compose up -d`.
+4. Run `docker-compose up -d` to start your docker containers.
 
 Note, that `./app` folder is added to `.gitignore` which you may want to change if by any chance you choose to store docker setup and your source code in the same repo. 
 
-It's generally recommended to contain source code in a sub directory so that you can easily add other members in the stack later.
+## Alternative installation
+
+It's generally recommended to contain source code in a sub directory so that you can easily add other members in the stack later (i.e. node application or SPA). If you have a more standard Laravel setup though, you can just follow the guide bellow.
+
+1. Copy `docker/`, `docker-compose.yml` and `docker.env.example` to the root of your Laravel repository.
+2. Run `cp docker.env.example docker.env` in your project root
+2. Edit `.gitignore` to include `docker.env` file
+3. Edit your `.env` and `.env.example` files to include values from the `.env.example` file in this repository
+4. Replace `./app:/opt/project` with `./:/opt/project` in your docker-compose.yml
+5. Run `docker-compose up -d` to start your docker containers.
 
 ## Virtual hosts
 
@@ -136,7 +145,7 @@ It's not included by by default for performance reasons.
 
 Don't look for `cron` logs. There ain't any and `docker-compose logs cron` won't work. There are various hacks to circumvent this limitation when running cron daemon in Docker container and you can look them up on Stackoverflow, but they are ugly (and more importantly, they make maintaining your Docker deployment much harder) so I won't be introducing them by default for now.
 
-Note, that cron image includes PHP CLI so you might want to sync it with some of the changes in php image. You probably won't be doing this much often as a lot of php settings are configured via environment variables.
+**Note, that cron image includes PHP CLI so you might want to sync it with some of the changes in the main php image.** You probably won't be doing this much often as a lot of php settings are configured via environment variables.
 
 ## Beanstalkd
 
