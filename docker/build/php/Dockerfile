@@ -100,5 +100,7 @@ COPY 00-fpm.ini /etc/php/7.1/fpm/conf.d/00-fpm.ini
 COPY 10-opcache.ini /etc/php/7.1/fpm/conf.d/10-opcache.ini
 COPY 20-xdebug.ini /etc/php/7.1/fpm/conf.d/20-xdebug.ini
 
+WORKDIR /opt/project
+
 EXPOSE 9000
 CMD ["php-fpm7.1"]
