@@ -53,6 +53,8 @@ Add this to your `docker.env` file. You can replace the values below with your h
 VIRTUAL_HOST=localhost,.localtunnel.me,.ngrok.io,.xip.io
 ```
 
+> If you're working on Windows machine, it's possible you will encounter an [issue related to exposed 3306 port](https://github.com/jwilder/nginx-proxy/issues/699) when jwilder/nginx-proxy and mysql services are run simultaneously. This issue requires further investigation, but for now you can monkey patch it by exposing MySQL on other port inside the network. [See exponse property reference](https://docs.docker.com/compose/compose-file/#expose). Or alternatively, you separate these 2 services by network (not tested). The bug was first spotted after upgrading Docker to 1.13.0.
+
 ## Mailhog
 
 Add Mailhog service (the application itself should connect on port `1025`):
