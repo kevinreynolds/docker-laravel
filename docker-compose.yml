@@ -15,10 +15,10 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         ports:
-            - ${PROXY_PORT}:80
+            - ${DOCKER_PROXY_PORT}:80
         volumes_from:
             - app
 
@@ -26,14 +26,14 @@ services:
         build: ./docker/build/php
         env_file: docker.env
         extra_hosts:
-            - dockerhost:${XDEBUG_HOST}
+            - dockerhost:${DOCKER_XDEBUG_HOST}
         links:
             - app
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         volumes_from:
             - app
 
@@ -43,10 +43,10 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         ports:
-            - ${MYSQL_PORT}:3306
+            - ${DOCKER_MYSQL_PORT}:3306
         volumes:
             - mysql:/var/lib/mysql
 

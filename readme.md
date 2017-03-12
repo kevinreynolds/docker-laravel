@@ -19,7 +19,7 @@
 
 ## Installation
 
-1. Put/clone you Laravel application in `./app` folder. 
+1. Put/clone you Laravel application in `./app` folder.
 
 2. Create your environment configuration: `cp .env.example .env`
 
@@ -27,7 +27,7 @@
 
 4. Run `docker-compose up -d` to start your docker containers.
 
-Note, that `./app` folder is added to `.gitignore` which you may want to change if by any chance you choose to store docker setup and your source code in the same repo. 
+Note, that `./app` folder is added to `.gitignore` which you may want to change if by any chance you choose to store docker setup and your source code in the same repo.
 
 ## Alternative installation
 
@@ -42,11 +42,11 @@ It's generally recommended to contain source code in a sub directory so that you
 
 ## Virtual hosts
 
-Remove this section from nginx service definition in `docker-compose.yml` or replace `PROXY_PORT` with other variable value to free port 80:
+Remove this section from nginx service definition in `docker-compose.yml` or replace `DOCKER_PROXY_PORT` with other variable value to free port 80:
 
 ```
         ports:
-            - ${PROXY_PORT}:80
+            - ${DOCKER_PROXY_PORT}:80
 ```
 
 Add this proxy service:
@@ -58,10 +58,10 @@ Add this proxy service:
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         ports:
-            - ${PROXY_PORT}:80
+            - ${DOCKER_PROXY_PORT}:80
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
 ```
@@ -84,16 +84,16 @@ Add Mailhog service (the application itself should connect on port `1025`):
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         ports:
-            - ${MAILHOG_PORT}:8025
+            - ${DOCKER_MAILHOG_PORT}:8025
 ```
 
 edit `.env` file:
 
 ```
-MAILHOG_PORT=8025
+DOCKER_MAILHOG_PORT=8025
 ```
 
 ## Redis
@@ -107,10 +107,10 @@ Add redis service
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         ports:
-            - ${REDIS_PORT}:6379
+            - ${DOCKER_REDIS_PORT}:6379
         volumes:
             - redis:/data
 ```
@@ -125,7 +125,7 @@ and corresponding volume
 Add the variables below to your `.env` file.
 
 ```
-REDIS_PORT=6379
+DOCKER_REDIS_PORT=6379
 
 # Example: "--requirepass secret --maxmemory 100mb --maxmemory-policy allkeys-lru"
 REDIS_PARAMETERS=
@@ -135,7 +135,7 @@ REDIS_PARAMETERS=
 
 Use [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) browser extension and PhpStorm to work with Xdebug on Docker.
 
-You must first set `XDEBUG_HOST` in `.env` file so that you can connect to host machine from inside the  docker container. For example, on Windows 10 the correct value would be `10.0.75.1`.
+You must first set `DOCKER_XDEBUG_HOST` in `.env` file so that you can connect to host machine from inside the  docker container. For example, on Windows 10 the correct value would be `10.0.75.1`.
 
 You may temporarily mount this volume on php service to get an easy access to Xdebug Profiler Snapshots if you need one
 
@@ -156,8 +156,8 @@ Add cron service to `docker-compose.yml`:
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         volumes_from:
             - app
 ```
@@ -198,10 +198,10 @@ If you wish to use postgres, simply replace mysql's service and volume with the 
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         ports:
-            - "{POSTGRES_PORT}:5432"
+            - "{DOCKER_POSTGRES_PORT}:5432"
         volumes:
             - postgres:/var/lib/postgresql/data
 ```
@@ -216,7 +216,7 @@ If you wish to use postgres, simply replace mysql's service and volume with the 
 Add this to `.env` file:
 
 ```
-POSTGRES_PORT=5432
+DOCKER_POSTGRES_PORT=5432
 ```
 
 Add this to your `docker.env` file:
@@ -249,17 +249,17 @@ I provide a very naive implementation for running node and single page applicati
         command: npm run start
         env_file: docker.env
         expose:
-            - ${NODE_PORT}
+            - ${DOCKER_NODE_PORT}
         links:
             - napp
             - redis
         logging:
             driver: json-file
             options:
-                max-size: ${SERVICE_LOG_SIZE}
-                max-file: ${SERVICE_LOG_ROTATE}
+                max-size: ${DOCKER_LOG_SIZE}
+                max-file: ${DOCKER_LOG_ROTATE}
         ports:
-            - ${NODE_PORT}:${NODE_PORT}
+            - ${DOCKER_NODE_PORT}:${DOCKER_NODE_PORT}
         volumes_from:
             - napp
 ```
@@ -267,7 +267,7 @@ I provide a very naive implementation for running node and single page applicati
 Add this line to `docker.env` file:
 
 ```
-NODE_PORT=3000
+DOCKER_NODE_PORT=3000
 ```
 
 You might want to change/remove default command or disable service dependency on redis (enabled by default so you don't forget it for Pub/Sub stuff).
